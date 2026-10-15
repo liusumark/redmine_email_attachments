@@ -26,7 +26,7 @@ class AttachmentPatch
       Rails.logger.info message.content_type
       attachment_hash = Hash.new
       html_part.body = html_part.body.to_s.gsub(/<body[^>]*>/, "\\0 ")
-      html_part.body.to_s.gsub(FIND_ATTACHMENT_SRC_PATTERN) do
+      html_part.body.to_s.scan(FIND_ATTACHMENT_SRC_PATTERN) do
         image_url = $2
         # is there an attachment whose name matches this attachment?
         attachment_object = Attachment.where(:id => Pathname.new(image_url).dirname.basename.to_s).first

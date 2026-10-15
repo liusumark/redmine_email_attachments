@@ -38,7 +38,7 @@ class AttachmentStorageTest < Minitest::Test
       content = "\xFF\x00\xFE".b
       File.binwrite(path, content)
       Attachment.record = Record.new('binary.bin', path)
-      html = '<body><a href="http://example.invalid/attachments/download/1/binary.bin">binary.bin</a> added</body>'
+      html = '<body>中文通知 <a href="http://example.invalid/attachments/download/1/binary.bin">binary.bin</a> added</body>'
       message = Message.new(Part.new('plain'), Part.new(html), [], 'multipart/alternative', {})
       AttachmentPatch.delivering_email(message)
       assert_equal content, message.attachments['binary.bin']
