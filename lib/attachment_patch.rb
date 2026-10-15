@@ -6,8 +6,8 @@ class AttachmentPatch
     html_part = message.html_part
     
     # look for the "File x added" text and get an array of the filenames.
+    new_files = []
     if html_part
-      new_files = Array.new
       html_part.body.to_s.gsub(NEW_FILE_PATTERN) do
         new_files << $3
       end
@@ -34,10 +34,8 @@ class AttachmentPatch
           # is this attachment new?
           image_name = attachment_object.filename
           if new_files.include? image_name
-            # FIXME: Surely there's a way to get the file directory without hard-coding it.
             # FIXME: If you add file_a to the issue, then add file_a in a separate comment, both show as attachments.
-            image_path = '/usr/src/redmine/files/' + attachment_object.disk_directory + '/' + attachment_object.disk_filename
-            attachment_hash[image_name] = File.read(image_path)
+            attachment_hash[image_name] = File.binread(attachment_object.diskfile)
           end
         end
 
